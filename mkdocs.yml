@@ -1,0 +1,8 @@
+site_name: 'Monitoring Rules'
+site_description: "Documentation for the pokt network monitoring rules"
+
+nav:
+  - Home: index.md
+
+plugins:
+  - techdocs-core

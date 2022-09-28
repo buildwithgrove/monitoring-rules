@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: monitoring-rules
+  annotations:
+    github.com/project-slug: pokt-foundation/monitoring-rules
+    github.com/team-slug: pokt-foundation/devops
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - gitops
+    - IaC
+spec:
+  type: service
+  lifecycle: production
+  owner: devops
+  system: gitops
+  dependencyOf: 
+    - 'resource:tooling-us-east-1-cluster'
+    - 'resource:node-infrastructure-ap-southeast-1-cluster'
+    - 'resource:node-infrastructure-eu-central-1-cluster'

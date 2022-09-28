@@ -1,0 +1,39 @@
+name: Lint/Test
+
+on:
+  pull_request:
+    branches: [master]
+
+  workflow_dispatch:
+
+jobs:
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install yamllint
+        run: |
+          sudo apt-get update && sudo apt-get install -y pip
+          pip install --user yamllint
+      - name: Run yamllint on manifests
+        run: yamllint --no-warnings alertmanager/ falco/
+        with:
+          soft_fail: true
+
+  lint-test-alertmanager-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - checkout
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ‘1.14.0’
+      - run:
+          name: Install promtool
+          command: GO111MODULE=on go get github.com/prometheus/prometheus/cmd/promtool@master
+      - run:
+          name: Run promtool on rules files
+          command: find alertmanager -type f -name *.rule.yaml -exec promtool check rules {} +
+      - run:
+          name: Run promtool test rules on alert.test.yaml files
+          command: find alertmanager -type f -name *.test.yaml -exec promtool test rules {} +

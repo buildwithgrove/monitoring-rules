@@ -1,0 +1,30 @@
+name: Build Configmaps
+
+on:
+  push:
+    branches: [master]
+
+  workflow_dispatch:
+
+jobs:
+  lint-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - checkout
+      - uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+        id: install
+      - name: Run build script
+        run: ./.github/scripts/build.sh
+        shell: bash
+      - name: Commit changes
+        run: |
+          git config --global user.name 'DevOps'
+          git config --global user.email "devops@pokt.network"
+          git remote add origin https://github.com/${{ github.repository }}
+          git config --global push.default current
+          git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}
+          git add ./**/*rules-configmap.yaml
+          git commit -m "UPDATE: Push new ConfigMap version from rules [skip ci]"
+          git push
