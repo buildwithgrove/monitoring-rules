@@ -23,9 +23,6 @@ jobs:
         run: |
           git config --global user.name 'DevOps'
           git config --global user.email "devops@pokt.network"
-          git remote add origin https://github.com/${{ github.repository }}
-          git config --global push.default current
-          git remote set-url origin https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}
           git add ./**/*rules-configmap.yaml
           git commit -m "UPDATE: Push new ConfigMap version from rules [skip ci]"
           git push
